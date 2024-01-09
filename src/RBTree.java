@@ -119,7 +119,6 @@ public class RBTree {
     }
 
     private void rotateLeft(Node node){
-        //if (node == null || node.right == null) return;
         Node parent = node.parent;
         Node rightChild = node.right;
 
@@ -133,7 +132,6 @@ public class RBTree {
     }
 
     private void rotateRight(Node node){
-        //if (node == null || node.left == null) return;
         Node parent = node.parent;
         Node leftChild = node.left;
 
