@@ -26,27 +26,26 @@ public class RBTree<T extends Comparable <T>> {
 
                 if(parent == null) {
                         root = newNode;
-//                        newNode.color = BLACK;
-//                        return;
+                        newNode.color = BLACK;
+                        return;
                 }
-                else if (key.compareTo(parent.data) < 0)
+
+                if (key.compareTo(parent.data) < 0) {
                         parent.left = newNode;
-                else
+                } else {
                         parent.right = newNode;
+                }
                 newNode.parent = parent;
                 // Does nothing
                 fixRedBlackPropertiesAfterInsert(newNode);
         }
         private void fixRedBlackPropertiesAfterInsert(Node<T> node){
                 //Case 1:
-                if(node == root)
-                        node.color = BLACK;
-
-                        //Case 2:
-                else if(node.parent.color == RED && node.parent == root)
+                if(node.parent.color == RED && node.parent == root) {
                         node.parent.color = BLACK;
+                }
 
-                        //Case 3:
+                //Case 3:
                 else if(!checkUncleBlack(node) && node.parent.color == RED){
                         Node<T> grandparent = node.parent.parent;
                         //System.out.println("Case3");
