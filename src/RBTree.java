@@ -13,7 +13,6 @@ public class RBTree<T extends Comparable <T>> {
         public void insertNode(T key) throws IllegalArgumentException {
                 Node<T> node = root;
                 Node<T> parent = null;
-
                 while(node != null) {
                         parent = node;
                         if (key.compareTo(node.data) == 0) {
@@ -23,13 +22,11 @@ public class RBTree<T extends Comparable <T>> {
                 }
                 Node<T> newNode = new Node<>(key);
                 newNode.color = RED;
-
                 if(parent == null) {
                         root = newNode;
                         newNode.color = BLACK;
                         return;
                 }
-
                 if (key.compareTo(parent.data) < 0) {
                         parent.left = newNode;
                 } else {
@@ -40,16 +37,9 @@ public class RBTree<T extends Comparable <T>> {
                 fixRedBlackPropertiesAfterInsert(newNode);
         }
         private void fixRedBlackPropertiesAfterInsert(Node<T> node){
-                //Case 1:
-                if(node.parent.color == RED && node.parent == root) {
-                        node.parent.color = BLACK;
-                }
-
                 //Case 3:
-                else if(!checkUncleBlack(node) && node.parent.color == RED){
+                if(!checkUncleBlack(node) && node.parent.color == RED){
                         Node<T> grandparent = node.parent.parent;
-                        //System.out.println("Case3");
-                        //Repair both Parent and Uncle
                         grandparent.left.color = BLACK;
                         grandparent.right.color = BLACK;
                         grandparent.color = RED;
