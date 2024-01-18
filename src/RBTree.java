@@ -34,12 +34,15 @@ public class RBTree<T extends Comparable <T>> {
                 }
                 newNode.parent = parent;
                 // Does nothing
-                fixRedBlackPropertiesAfterInsert(newNode);
+                if (parent.color == RED) {
+                        fixRedBlackPropertiesAfterInsert(newNode);
+                }
+
                 root.color = BLACK;
         }
         private void fixRedBlackPropertiesAfterInsert(Node<T> node) {
                 //Case 1:
-                if (!checkUncleBlack(node) && node.parent.color == RED) {
+                if (!checkUncleBlack(node)) {
                         Node<T> grandparent = node.parent.parent;
                         grandparent.left.color = BLACK;
                         grandparent.right.color = BLACK;
@@ -50,43 +53,38 @@ public class RBTree<T extends Comparable <T>> {
                         return;
                 }
                 //Case 2:
-                if (checkInnerGrandson(node) && node.parent.color == RED) {
-                        case2Shuffle(node);
+                if (checkInnerGrandson(node)) {
+                        if (node.parent.left == node) {
+                                rotateRight(node.parent);
+                                rotateLeft(node.parent);
+                                if(node.left != null) {
+                                        node.left.color = RED;
+                                }
+                        } else {
+                                rotateLeft(node.parent);
+                                rotateRight(node.parent);
+                                if (node.right != null) {
+                                        node.right.color = RED;
+                                }
+                        }
+                        node.color = BLACK;
                         return;
                 }
                 //Case 3:
-                if (!checkInnerGrandson(node) && node.parent.color == RED && checkUncleBlack(node)){
-                        Node<T> grandfather = node.parent.parent;
+                if (!checkInnerGrandson(node) && checkUncleBlack(node)){
+                        Node<T> grandparent = node.parent.parent;
                         Node<T> father = node.parent;
-                        if (grandfather.left == father) {
-                                rotateRight(grandfather);
+                        if (grandparent.left == father) {
+                                rotateRight(grandparent);
 
                         } else {
-                                rotateLeft(grandfather);
+                                rotateLeft(grandparent);
                         }
-                        grandfather.color = RED;
+                        grandparent.color = RED;
                         father.color = BLACK;
                 }
         }
 
-        private void case2Shuffle(Node<T> node) {
-                if (node.parent.left == node) {
-                        rotateRight(node.parent);
-                        rotateLeft(node.parent);
-                        node.color = BLACK;
-                        if(node.left != null) {
-                                node.left.color = RED;
-                        }
-                } else {
-                        rotateLeft(node.parent);
-                        rotateRight(node.parent);
-                        node.color = BLACK;
-                        if (node.right != null) {
-                                node.right.color = RED;
-                        }
-                }
-
-        }
         private boolean checkInnerGrandson(Node<T> grandson) {
                 Node<T> father = grandson.parent;
                 Node<T> grandfather = father.parent;
