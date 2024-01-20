@@ -22,6 +22,8 @@ public class RBTree<T extends Comparable <T>> {
                 }
                 Node<T> newNode = new Node<>(key);
                 newNode.color = RED;
+
+                // Case 0: The new node is a root node
                 if (parent == null) {
                         root = newNode;
                         newNode.color = BLACK;
@@ -41,7 +43,11 @@ public class RBTree<T extends Comparable <T>> {
                 root.color = BLACK;
         }
         private void fixRedBlackPropertiesAfterInsert(Node<T> node) {
-                //Case 1:
+                // Wir haben den Case entfernt, welcher dann ausgeführt wird, wenn der Parent-Knoten rot ist und
+                // gleichzeitig der Root-Knoten ist. Dieser Case wird nie besucht weil der Logik halber unser
+                // Root-Knoten immer schwarz ist.
+
+                // Case 1: (Siehe Vorlesung Case 3 usw.)
                 if (!checkUncleBlack(node)) {
                         Node<T> grandparent = node.parent.parent;
                         grandparent.left.color = BLACK;
@@ -52,7 +58,8 @@ public class RBTree<T extends Comparable <T>> {
                         }
                         return;
                 }
-                //Case 2:
+
+                // Case 2:
                 if (checkInnerGrandson(node)) {
                         if (node.parent.left == node) {
                                 rotateRight(node.parent);
@@ -70,8 +77,9 @@ public class RBTree<T extends Comparable <T>> {
                         node.color = BLACK;
                         return;
                 }
-                //Case 3:
-                if (!checkInnerGrandson(node) && checkUncleBlack(node)){
+
+                // Case 3:
+                if (!checkInnerGrandson(node) && checkUncleBlack(node)) {
                         Node<T> grandparent = node.parent.parent;
                         Node<T> father = node.parent;
                         if (grandparent.left == father) {
@@ -91,7 +99,7 @@ public class RBTree<T extends Comparable <T>> {
                 if (grandfather == null) {
                         return false;
                 }
-                //Checks if the Node is an Inner Grandson
+                // Checks if the Node is an Inner Grandson
                 return grandson == father.left && father == grandfather.right || grandson == father.right && father == grandfather.left;
         }
 
@@ -99,7 +107,7 @@ public class RBTree<T extends Comparable <T>> {
         private boolean checkUncleBlack(Node<T> grandson) {
                 Node<T> father = grandson.parent;
                 Node<T> grandfather = father.parent;
-                //Does not exist, is not black
+                // Does not exist, is not black
                 if (grandfather == null) {
                         return false;
                 }
