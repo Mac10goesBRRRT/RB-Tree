@@ -23,7 +23,7 @@ public class RBTree<T extends Comparable <T>> {
                 Node<T> newNode = new Node<>(key);
                 newNode.color = RED;
 
-                // Case 0: The new node is a root node
+                // Case 1: The new node is a root node
                 if (parent == null) {
                         root = newNode;
                         newNode.color = BLACK;
@@ -35,7 +35,9 @@ public class RBTree<T extends Comparable <T>> {
                         parent.right = newNode;
                 }
                 newNode.parent = parent;
-                // Does nothing
+
+                // Repairs the Tree. After everything is done,
+                // we color the Root Black
                 if (parent.color == RED) {
                         fixRedBlackPropertiesAfterInsert(newNode);
                 }
@@ -43,11 +45,13 @@ public class RBTree<T extends Comparable <T>> {
                 root.color = BLACK;
         }
         private void fixRedBlackPropertiesAfterInsert(Node<T> node) {
-                // Wir haben den Case entfernt, welcher dann ausgeführt wird, wenn der Parent-Knoten rot ist und
-                // gleichzeitig der Root-Knoten ist. Dieser Case wird nie besucht weil der Logik halber unser
-                // Root-Knoten immer schwarz ist.
+                // Case 2: Father is Root and Red
+                if (node.parent == root){
+                        node.parent.color = BLACK;
+                        return;
+                }
 
-                // Case 1: (Siehe Vorlesung Case 3 usw.)
+                // Case 3: Father and Uncle are Red
                 if (!checkUncleBlack(node)) {
                         Node<T> grandparent = node.parent.parent;
                         grandparent.left.color = BLACK;
@@ -59,7 +63,7 @@ public class RBTree<T extends Comparable <T>> {
                         return;
                 }
 
-                // Case 2:
+                // Case 4: Father is red, Uncle is Black, Node is inner Grandchild
                 if (checkInnerGrandson(node)) {
                         if (node.parent.left == node) {
                                 rotateRight(node.parent);
@@ -78,7 +82,7 @@ public class RBTree<T extends Comparable <T>> {
                         return;
                 }
 
-                // Case 3:
+                // Case 5: Father is red, Uncle is Black, Node is outer Grandchild
                 if (!checkInnerGrandson(node) && checkUncleBlack(node)) {
                         Node<T> grandparent = node.parent.parent;
                         Node<T> father = node.parent;
